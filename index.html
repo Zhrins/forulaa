@@ -197,8 +197,8 @@
         <div class="match-header"><span>Jawaban Lela</span><span>Tebakan Nawal</span></div>
         <div class="match-list-container" id="match-list"></div>
         <div id="hasil-akhir-cocok" style="display: none; animation: fadeInRow 1s forwards;">
-            <h2 style="font-size: 26px; color: #8a6a6a; margin-bottom: -5px;">12 dari 13</h2>
-            <p style="color: #d19a9a; font-weight: bold; font-size: 12px;">+ 1 Nemu pertanyaan rahasia</p>
+            <h2 id="teks-skor-akhir" style="font-size: 26px; color: #8a6a6a; margin-bottom: -5px;">Skor Pencocokan</h2>
+            <p style="color: #d19a9a; font-weight: bold; font-size: 12px;">(Hasil jujur dari isi hati kita)</p>
             <button class="btn-primary" onclick="pindah('sec-pencocokan', 'sec-surat-1'); munculkanMaskot('baca pesanku pelan-pelan ya...');">Lanjut baca pesanku ya</button>
         </div>
     </div>
@@ -232,7 +232,7 @@
         <button class="btn-primary" style="margin-top: 15px;" onclick="pindah('sec-surat-3', 'sec-surat-4'); munculkanMaskot('baca bagian ini ya...');">Baca lagi ya...</button>
     </div>
 
-    <!-- BAGIAN 4 (BARU): Masih Sayang & Ego Kalah -->
+    <!-- BAGIAN 4: Masih Sayang & Ego Kalah -->
     <div id="sec-surat-4" class="container" style="padding-top: 50px;">
         <h3 style="border-bottom: 1px solid #f2e3e3; padding-bottom: 15px; font-size: 16px;">Jujur Dari Hati...</h3>
         <p style="font-style: italic; text-align: left; font-family: 'Lora', serif; font-size: 14px; color: #6e5252;">
@@ -247,7 +247,7 @@
         <p style="font-style: italic; text-align: left; font-family: 'Lora', serif; font-size: 14px; color: #6e5252;">
             "Aku bener-bener nyesel. Kesibukan dan hariku nggak ada artinya kalau nggak ada kamu. Aku pengen kita perbaikin komunikasi kita dari awal, sama-sama. Aku janji bakal lebih sabar dan buang jauh-jauh egoku."
         </p>
-        <p style="text-align: right; font-weight: bold; color: #d19a9a;">- Nawal yang masih sayang kamu</p>
+        <p style="text-align: right; font-weight: bold; color: #d19a9a;">- Nawal yang tulus buat kamu</p>
         <button class="btn-primary" style="margin-top: 15px;" onclick="pindah('sec-surat-5', 'sec-ask'); munculkanMaskot('apapun jawabanmu, jujur aja ya...');">Lanjut ke intinya...</button>
     </div>
 
@@ -311,7 +311,7 @@
                 </div>
             </div>
             <div class="ticket-body">
-                <p style="font-size: 13px; color: #6e5252; margin-top:0;"><b>Officially Back Together!</b><br>Kesempatan kedua LDR ini dimulai pada <br><span style="color:#d19a9a;">27 September 2026</span></p>
+                <p style="font-size: 13px; color: #6e5252; margin-top:0;"><b>Officially Back Together!</b><br>Kesempatan kedua LDR ini dimulai pada <br><span style="color:#d19a9a;">26 September 2026</span></p>
                 <div class="ticket-divider"></div>
                 <p class="ticket-rekap-title">Jawaban Pilihan Lela:</p>
                 <div id="rekap-jawaban-list" style="margin-bottom: 15px; opacity: 0.8;"></div>
@@ -337,7 +337,6 @@
 
         function cekSandi() {
             let jwb = document.getElementById("jawabanSandi").value.toLowerCase().trim();
-            // Sandinya bioskop
             if (jwb === "bioskop") { 
                 document.getElementById('sec-1').style.display = 'none';
                 let grid = document.getElementById('sec-grid');
@@ -381,6 +380,7 @@
             { q: "Makanan yang bikin kamu seneng:", bubble: "apa aja asal bisa makan bareng kamu kelak pas ketemu.", opt: [{t: "Yang pedas", i: "🌶️"}, {t: "Yang manis", i: "🍦"}, {t: "Yang gurih", i: "🍟"}, {t: "Apa aja, asal bareng", i: "✨"}] },
             { q: "Cara aku bilang sayang ke kamu pas LDR:", bubble: "lewat perhatian kecil jarak jauh, nyadar nggak?", opt: [{t: "Bilang langsung", i: "🗣️"}, {t: "Lewat perhatian kecil", i: "🎁"}, {t: "Lewat bercandaan", i: "🐥"}, {t: "Nggak bilang, tapi keliatan", i: "🕶️"}] },
             { q: "Nawal tuh orangnya...", bubble: "suka ambil keputusan cepet tanpa mikir... aku tau aku salah.", opt: [{t: "Lucu", i: "🎉"}, {t: "Perhatian", i: "💌"}, {t: "Ceroboh / Ngeselin", i: "😤"}, {t: "Bikin momen jadi spesial", i: "🕯️"}] },
+            // Pertanyaan ke-13 (Index 12): Nawal nebak Lela jawab "Masih banget ❤️"
             { q: "Lela... masih sayang nggak sama Nawal?", bubble: "please jawab jujur ya... 🥺", opt: [{t: "Udah males ah", i: "🙄"}, {t: "Sedikit aja", i: "🤏"}, {t: "Masih banget ❤️", i: "🫣"}] }
         ];
 
@@ -415,16 +415,44 @@
             sembunyikanMaskot(); pindah('sec-intro-cocok', 'sec-pencocokan');
             let listContainer = document.getElementById('match-list');
             let htmlList = ""; let delayTime = 0.2;
+            let totalBenar = 0;
+
             jawabanUser.forEach((ans, idx) => {
-                let rakaText = ans.text; let rakaIcon = ans.icon; let isMatch = true;
+                let rakaText = ans.text; 
+                let rakaIcon = ans.icon; 
+                let isMatch = true;
+                
+                // 1. Soal ke-8 (Index 7) dibuat salah otomatis (bawaan)
                 if (idx === 7) { 
-                    isMatch = false; let opsiLain = dataKuis[7].opt.find(o => o.t !== ans.text);
-                    rakaText = opsiLain.t; rakaIcon = opsiLain.i;
+                    isMatch = false; 
+                    let opsiLain = dataKuis[7].opt.find(o => o.t !== ans.text);
+                    if(opsiLain) { rakaText = opsiLain.t; rakaIcon = opsiLain.i; }
+                } 
+                // 2. Soal ke-13 (Index 12): Nawal nebak "Masih banget ❤️", Lela disesuaikan sama pilihan aslinya
+                else if (idx === 12) {
+                    let tebakanNawal = { text: "Masih banget ❤️", icon: "🫣" };
+                    rakaText = tebakanNawal.text;
+                    rakaIcon = tebakanNawal.icon;
+                    
+                    // Cek apakah pilihan Lela sama dengan tebakan Nawal
+                    if (ans.text !== tebakanNawal.text) {
+                        isMatch = false;
+                    }
                 }
+
+                if (isMatch) totalBenar++;
+
                 htmlList += `<div class="match-row" style="animation: fadeInRow 0.4s ease-out forwards; animation-delay: ${delayTime}s;"><div class="match-box"><span>${ans.icon}</span> <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${ans.text}</span></div><div class="match-icon">${isMatch ? '✔️' : '❌'}</div><div class="match-box raka-box ${!isMatch ? 'wrong' : ''}"><span>${rakaIcon}</span> <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${rakaText}</span></div></div>`;
                 delayTime += 0.3;
             });
+
             listContainer.innerHTML = htmlList;
+            
+            // Update teks skor akhir secara dinamis sesuai total yang cocok/nggak
+            setTimeout(() => {
+                document.getElementById('teks-skor-akhir').innerText = `${totalBenar} dari 13 Cocok`;
+            }, 500);
+
             let scrollInterval = setInterval(() => { listContainer.scrollTop += 20; }, 100);
             setTimeout(() => {
                 clearInterval(scrollInterval);
